@@ -1,14 +1,14 @@
-FROM ubuntu:xenial
+FROM ubuntu
 LABEL maintainer="Piasy Xu (xz4215@gmail.com)"
 
 EXPOSE 8080 8089 3478 3033 59000-65000
 
 WORKDIR /
 
-ENV GAE_VER 1.9.74
-ENV GOLANG_VER 1.8.3
-ENV LIBEVENT_VER 2.1.8
-ENV COTURN_VER 4.5.0.7
+ENV GAE_VER 1.9.86
+ENV GOLANG_VER 1.13.1
+ENV LIBEVENT_VER 2.1.11
+ENV COTURN_VER 4.5.1.1
 
 ENV PUBLIC_IP 127.0.0.1
 
@@ -21,7 +21,9 @@ RUN apt-get install -y build-essential vim git curl wget unzip python2.7 python-
     pip install git+https://github.com/bendikro/supervisord-dependent-startup
 
 # NodeJS
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+#RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+#RUN apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
 
 # Golang
@@ -72,6 +74,7 @@ RUN grunt build
 WORKDIR /
 
 RUN npm install express
+RUN npm install cors
 COPY ice.js /
 COPY constants.py /apprtc/out/app_engine/constants.py
 
@@ -82,4 +85,9 @@ COPY apprtc_supervisord.conf /
 
 COPY run.sh /
 RUN chmod +x /run.sh
+RUN mkdir -p /webrtc_avconf
+RUN mkdir -p /cert
+COPY *.pem /cert/
+EXPOSE 8081
 CMD /run.sh
+
