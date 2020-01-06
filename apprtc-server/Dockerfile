@@ -1,14 +1,10 @@
 FROM ubuntu
 LABEL maintainer="Piasy Xu (xz4215@gmail.com)"
 
-EXPOSE 8080 8089 3478 3033 59000-65000
-
 WORKDIR /
 
 ENV GAE_VER 1.9.86
 ENV GOLANG_VER 1.13.1
-ENV LIBEVENT_VER 2.1.11
-ENV COTURN_VER 4.5.1.1
 
 ENV PUBLIC_IP 127.0.0.1
 
@@ -21,8 +17,6 @@ RUN apt-get install -y build-essential vim git curl wget unzip python2.7 python-
     pip install git+https://github.com/bendikro/supervisord-dependent-startup
 
 # NodeJS
-#RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-#RUN apt-get install -y nodejs
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
 
@@ -40,18 +34,6 @@ RUN wget https://storage.googleapis.com/appengine-sdks/featured/$GAE_ZIP
 RUN unzip $GAE_ZIP -d /usr/local
 ENV PATH $PATH:/usr/local/google_appengine
 
-# Coturn server
-RUN wget https://github.com/libevent/libevent/releases/download/release-$LIBEVENT_VER-stable/libevent-$LIBEVENT_VER-stable.tar.gz
-RUN tar xvfz libevent-$LIBEVENT_VER-stable.tar.gz
-WORKDIR libevent-$LIBEVENT_VER-stable
-RUN ./configure && make && make install
-WORKDIR /
-RUN wget http://turnserver.open-sys.org/downloads/v$COTURN_VER/turnserver-$COTURN_VER.tar.gz
-RUN tar xvfz turnserver-$COTURN_VER.tar.gz
-WORKDIR turnserver-$COTURN_VER
-RUN ./configure && make && make install
-RUN turnadmin -a -u ninefingers -r apprtc -p youhavetoberealistic
-COPY turnserver.conf /etc/turnserver.conf
 
 # AppRTC
 WORKDIR /
@@ -73,9 +55,6 @@ RUN grunt build
 
 WORKDIR /
 
-RUN npm install express
-RUN npm install cors
-COPY ice.js /
 COPY constants.py /apprtc/out/app_engine/constants.py
 
 # Clean up APT when done.
@@ -88,6 +67,6 @@ RUN chmod +x /run.sh
 RUN mkdir -p /webrtc_avconf
 RUN mkdir -p /cert
 COPY *.pem /cert/
-EXPOSE 8081
+EXPOSE 8080 8081 8089
 CMD /run.sh
 

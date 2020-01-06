@@ -10,7 +10,7 @@ REDIRECT_DOMAINS =  [
   'apprtc.appspot.com', 'apprtc.webrtc.org', 'www.appr.tc'
 ]
 # URL which we should redirect to if matching in REDIRECT_DOMAINS.
-REDIRECT_URL = 'https://appr.tc'
+REDIRECT_URL = 'appr.tc'
 
 ROOM_MEMCACHE_EXPIRATION_SEC = 60 * 60 * 24
 MEMCACHE_RETRY_LIMIT = 100
@@ -37,7 +37,7 @@ ICE_SERVER_OVERRIDE = None
 #   }
 # ]
 
-ICE_SERVER_BASE_URL = 'https://SERVER_PUBLIC_IP:3033'
+ICE_SERVER_BASE_URL = 'https://dev.haoxin.cn:59000'
 ICE_SERVER_URL_TEMPLATE = '%s/iceconfig?key=%s'
 ICE_SERVER_API_KEY = os.environ.get('ICE_SERVER_API_KEY')
 
@@ -46,7 +46,8 @@ WSS_INSTANCE_HOST_KEY = 'host_port_pair'
 WSS_INSTANCE_NAME_KEY = 'vm_name'
 WSS_INSTANCE_ZONE_KEY = 'zone'
 WSS_INSTANCES = [{
-    WSS_INSTANCE_HOST_KEY: 'SERVER_PUBLIC_IP:8089',
+    WSS_INSTANCE_HOST_KEY: 'lit121.haoxin.cn:8089',
+    #WSS_INSTANCE_HOST_KEY:  os.environ.get('WSS_SERVER'),
     WSS_INSTANCE_NAME_KEY: 'wsserver-std',
     WSS_INSTANCE_ZONE_KEY: 'us-central1-a'
 }]
