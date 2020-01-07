@@ -6,8 +6,6 @@ WORKDIR /
 ENV GAE_VER 1.9.86
 ENV GOLANG_VER 1.13.1
 
-ENV PUBLIC_IP 127.0.0.1
-
 RUN apt-get update -y
 
 # Deps
